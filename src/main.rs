@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use std::{iter::Peekable, str::Chars};
 
 #[derive(Debug, PartialEq)]
@@ -48,7 +51,7 @@ impl<'a> Tokenizer<'a> {
         match self.chars.peek().copied() {
             None => Token::Eof,
             Some('0'..='9') => self.read_int(),
-            Some('a'..='z' | 'A'..='Z' | '_') => self.read_identifier(),
+            Some(c) if c.is_ident_start() => self.read_identifier(),
             Some(c) => {
                 self.chars.next();
                 match c {
@@ -83,10 +86,7 @@ impl<'a> Tokenizer<'a> {
     fn read_identifier(&mut self) -> Token {
         let mut identifier = String::new();
 
-        while let Some(c) = self
-            .chars
-            .next_if(|c| matches!(c,'a'..='z' | 'A'..='Z' | '_' | '0'..='9'))
-        {
+        while let Some(c) = self.chars.next_if(char::is_ident) {
             identifier.push(c);
         }
 
@@ -95,6 +95,21 @@ impl<'a> Tokenizer<'a> {
             "fn" => Token::Function,
             _ => Token::Ident(identifier),
         }
+    }
+}
+
+trait CharExt {
+    fn is_ident_start(&self) -> bool;
+    fn is_ident(&self) -> bool;
+}
+
+impl CharExt for char {
+    fn is_ident_start(&self) -> bool {
+        matches!(self, 'a'..='z' | 'A'..='Z' | '_')
+    }
+
+    fn is_ident(&self) -> bool {
+        self.is_ident_start() || self.is_ascii_digit()
     }
 }
 
