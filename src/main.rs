@@ -163,18 +163,18 @@ fn main() {
     );
 
     loop {
-        match line_editor.read_line(&prompt) {
-            Ok(Signal::Success(buffer)) => {
-                println!("You wrote: {buffer}");
-            }
+        let line = match line_editor.read_line(&prompt) {
+            Ok(Signal::Success(buffer)) => buffer,
             Ok(Signal::CtrlD | Signal::CtrlC) => {
                 println!("Aborted!");
-                break;
+                return;
             }
             x => {
                 println!("Unexpected event: {x:?}");
-                break;
+                return;
             }
-        }
+        };
+        let tokens = Tokenizer::tokenize(&line);
+        println!("{tokens:?}");
     }
 }

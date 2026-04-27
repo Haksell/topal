@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-reedline = "0.47.0"
+reedline = "0.47"
 
 # [lints.rust]
 # TODO
