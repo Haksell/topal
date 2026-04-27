@@ -20,6 +20,9 @@ if (5 < 10) {
 } else {
     return false;
 }
+
+10 == 10;
+10 != 9;
 ";
 
     let tokens = Tokenizer::tokenize(source_code);
@@ -92,6 +95,14 @@ if (5 < 10) {
             Token::False,
             Token::Semicolon,
             Token::Rbrace,
+            Token::Int(10),
+            Token::Eq,
+            Token::Int(10),
+            Token::Semicolon,
+            Token::Int(10),
+            Token::NotEq,
+            Token::Int(9),
+            Token::Semicolon,
             Token::Eof,
         ]
     );

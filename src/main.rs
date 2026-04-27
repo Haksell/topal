@@ -20,7 +20,7 @@ enum Token {
     Else,
     Return,
 
-    // One-character:
+    // One character:
     Assign,
     Plus,
     Minus,
@@ -35,6 +35,10 @@ enum Token {
     Rbrace,
     Langle,
     Rangle,
+
+    // Two characters:
+    Eq,
+    NotEq,
 }
 
 struct Tokenizer<'a> {
@@ -70,11 +74,21 @@ impl<'a> Tokenizer<'a> {
             Some(c) if c.is_ident_start() => self.read_identifier(),
             Some(c) => {
                 self.chars.next();
+
+                // Handle 2-characters symbols (ugly but not worth refactoring)
+                if matches!(c, '=' | '!') && self.chars.next_if_eq(&'=').is_some() {
+                    match c {
+                        '=' => return Token::Eq,
+                        '!' => return Token::NotEq,
+                        _ => unreachable!(),
+                    }
+                }
+
                 match c {
                     '=' => Token::Assign,
+                    '!' => Token::Bang,
                     '+' => Token::Plus,
                     '-' => Token::Minus,
-                    '!' => Token::Bang,
                     '*' => Token::Asterisk,
                     '/' => Token::Slash,
                     ',' => Token::Comma,
