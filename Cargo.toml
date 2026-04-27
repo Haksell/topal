@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 
-[lints.rust]
+# [lints.rust]
 # TODO
 
 [lints.clippy]
@@ -23,6 +23,9 @@ suspicious = { level = "deny", priority = -1 }
 cargo_common_metadata = "allow"
 multiple_crate_versions = "allow"
 
+# nursery
+option_if_let_else = "allow"
+
 # pedantic
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
@@ -31,6 +34,7 @@ must_use_candidate = "allow"
 # restriction
 alloc_instead_of_core = "allow"
 arbitrary_source_item_ordering = "allow"
+arithmetic_side_effects = "allow"
 as_conversions = "allow"
 exhaustive_enums = "allow"
 exhaustive_structs = "allow"
@@ -46,8 +50,10 @@ print_stdout = "allow"
 shadow_reuse = "allow"
 shadow_same = "allow"
 shadow_unrelated = "allow"
+single_call_fn = "allow"
 single_char_lifetime_names = "allow"
 std_instead_of_core = "allow"
+unreachable = "allow"
 unseparated_literal_suffix = "allow"
 unwrap_used = "allow"
 use_debug = "allow"
