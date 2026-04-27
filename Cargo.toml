@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+reedline = "0.47.0"
 
 # [lints.rust]
 # TODO
@@ -43,6 +44,7 @@ implicit_return = "allow"
 min_ident_chars = "allow"
 missing_docs_in_private_items = "allow"
 missing_inline_in_public_items = "allow"
+non_ascii_literal = "allow"
 question_mark_used = "allow"
 panic = "allow"
 print_stderr = "allow"

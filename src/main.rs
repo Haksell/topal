@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+use reedline::{DefaultPrompt, DefaultPromptSegment, Reedline, Signal};
 use std::{iter::Peekable, str::Chars};
 
 #[derive(Debug, PartialEq)]
@@ -155,11 +156,25 @@ impl CharExt for char {
 }
 
 fn main() {
-    let tokens = Tokenizer::tokenize(
-        "\
-!-/*5;
-5 < 10 > 5;
-",
+    let mut line_editor = Reedline::create();
+    let prompt = DefaultPrompt::new(
+        DefaultPromptSegment::Basic("Σ ".into()),
+        DefaultPromptSegment::Empty,
     );
-    println!("{tokens:?}");
+
+    loop {
+        match line_editor.read_line(&prompt) {
+            Ok(Signal::Success(buffer)) => {
+                println!("You wrote: {buffer}");
+            }
+            Ok(Signal::CtrlD | Signal::CtrlC) => {
+                println!("Aborted!");
+                break;
+            }
+            x => {
+                println!("Unexpected event: {x:?}");
+                break;
+            }
+        }
+    }
 }
