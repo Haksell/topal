@@ -1,0 +1,16 @@
+enum Token {
+    Illegal,
+    Eof,
+    Ident,
+    Int(i32),
+    Assign,
+    Plus,
+    Comma,
+    Semicolon,
+    Lparen,
+    Rparen,
+    Lbrace,
+    Rbrace,
+    Function,
+    Let,
+}
