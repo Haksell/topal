@@ -43,15 +43,13 @@ impl<'a> Tokenizer<'a> {
     }
 
     fn read_token(&mut self) -> Token {
-        while self.chars.peek().is_some_and(|c| c.is_whitespace()) {
-            self.chars.next();
-        }
+        self.skip_whitespace();
 
         match self.chars.peek().copied() {
             None => Token::Eof,
             Some('0'..='9') => self.read_int(),
             Some('a'..='z' | 'A'..='Z' | '_') => self.read_identifier(),
-            Some(c @ ('=' | '+' | ',' | ';' | '(' | ')' | '{' | '}')) => {
+            Some(c) => {
                 self.chars.next();
                 match c {
                     '=' => Token::Assign,
@@ -62,10 +60,15 @@ impl<'a> Tokenizer<'a> {
                     ')' => Token::Rparen,
                     '{' => Token::Lbrace,
                     '}' => Token::Rbrace,
-                    _ => unreachable!(),
+                    _ => Token::Illegal,
                 }
             }
-            _ => Token::Illegal,
+        }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.chars.peek().is_some_and(|c| c.is_whitespace()) {
+            self.chars.next();
         }
     }
 
