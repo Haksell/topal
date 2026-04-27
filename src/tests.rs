@@ -11,6 +11,9 @@ let add = fn(x, y) {
 };
 
 let result = add(five, ten);
+
+!-/*5;
+5 < 10 > 5;
 ";
 
     let tokens = Tokenizer::tokenize(source_code);
@@ -53,6 +56,18 @@ let result = add(five, ten);
             Token::Comma,
             Token::Ident("ten".into()),
             Token::Rparen,
+            Token::Semicolon,
+            Token::Bang,
+            Token::Minus,
+            Token::Slash,
+            Token::Asterisk,
+            Token::Int(5),
+            Token::Semicolon,
+            Token::Int(5),
+            Token::Langle,
+            Token::Int(10),
+            Token::Rangle,
+            Token::Int(5),
             Token::Semicolon,
             Token::Eof,
         ]

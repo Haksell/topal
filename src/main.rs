@@ -5,20 +5,31 @@ use std::{iter::Peekable, str::Chars};
 
 #[derive(Debug, PartialEq)]
 enum Token {
+    // Special:
     Illegal,
     Eof,
     Ident(String),
     Int(i64),
+
+    // Keywords:
+    Function,
+    Let,
+
+    // One-character:
     Assign,
     Plus,
+    Minus,
+    Bang,
+    Asterisk,
+    Slash,
     Comma,
     Semicolon,
     Lparen,
     Rparen,
     Lbrace,
     Rbrace,
-    Function,
-    Let,
+    Langle,
+    Rangle,
 }
 
 struct Tokenizer<'a> {
@@ -57,12 +68,18 @@ impl<'a> Tokenizer<'a> {
                 match c {
                     '=' => Token::Assign,
                     '+' => Token::Plus,
+                    '-' => Token::Minus,
+                    '!' => Token::Bang,
+                    '*' => Token::Asterisk,
+                    '/' => Token::Slash,
                     ',' => Token::Comma,
                     ';' => Token::Semicolon,
                     '(' => Token::Lparen,
                     ')' => Token::Rparen,
                     '{' => Token::Lbrace,
                     '}' => Token::Rbrace,
+                    '<' => Token::Langle,
+                    '>' => Token::Rangle,
                     _ => Token::Illegal,
                 }
             }
@@ -114,6 +131,11 @@ impl CharExt for char {
 }
 
 fn main() {
-    let tokens = Tokenizer::tokenize(include_str!("../tests/fn_add.tpl"));
+    let tokens = Tokenizer::tokenize(
+        "\
+!-/*5;
+5 < 10 > 5;
+",
+    );
     println!("{tokens:?}");
 }
