@@ -14,6 +14,11 @@ enum Token {
     // Keywords:
     Function,
     Let,
+    True,
+    False,
+    If,
+    Else,
+    Return,
 
     // One-character:
     Assign,
@@ -108,8 +113,13 @@ impl<'a> Tokenizer<'a> {
         }
 
         match identifier.as_ref() {
-            "let" => Token::Let,
+            "else" => Token::Else,
+            "false" => Token::False,
             "fn" => Token::Function,
+            "if" => Token::If,
+            "let" => Token::Let,
+            "return" => Token::Return,
+            "true" => Token::True,
             _ => Token::Ident(identifier),
         }
     }

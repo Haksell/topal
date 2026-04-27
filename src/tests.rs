@@ -14,6 +14,12 @@ let result = add(five, ten);
 
 !-/*5;
 5 < 10 > 5;
+
+if (5 < 10) {
+    return true;
+} else {
+    return false;
+}
 ";
 
     let tokens = Tokenizer::tokenize(source_code);
@@ -69,6 +75,23 @@ let result = add(five, ten);
             Token::Rangle,
             Token::Int(5),
             Token::Semicolon,
+            Token::If,
+            Token::Lparen,
+            Token::Int(5),
+            Token::Langle,
+            Token::Int(10),
+            Token::Rparen,
+            Token::Lbrace,
+            Token::Return,
+            Token::True,
+            Token::Semicolon,
+            Token::Rbrace,
+            Token::Else,
+            Token::Lbrace,
+            Token::Return,
+            Token::False,
+            Token::Semicolon,
+            Token::Rbrace,
             Token::Eof,
         ]
     );
