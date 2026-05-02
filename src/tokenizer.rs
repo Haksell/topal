@@ -73,7 +73,7 @@ impl<'a> Tokenizer<'a> {
         let c = self.chars.peek().copied()?;
 
         Some(match c {
-            '0'..='9' => self.read_int(),
+            '0'..='9' => Token::Int(self.read_int()),
             c if c.is_ident_start() => self.read_identifier(),
             c => {
                 self.chars.next();
@@ -114,12 +114,12 @@ impl<'a> Tokenizer<'a> {
         }
     }
 
-    fn read_int(&mut self) -> Token {
+    fn read_int(&mut self) -> i64 {
         let mut int = 0;
         while let Some(digit) = self.chars.next_if(char::is_ascii_digit) {
             int = 10 * int + digit as i64 - '0' as i64;
         }
-        Token::Int(int)
+        int
     }
 
     fn read_identifier(&mut self) -> Token {
@@ -267,4 +267,6 @@ if (5 < 10) {
             ]
         );
     }
+
+    // TODO: test failed tokenization (Token::Illegal)
 }

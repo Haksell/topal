@@ -40,6 +40,11 @@ struct LetStatement {
     value: Expression,
 }
 
+#[derive(Debug, PartialEq)]
+enum ParseError {
+    WhatTheHeeeeell,
+}
+
 pub struct Parser<I>
 where
     I: Iterator<Item = Token>,
@@ -57,9 +62,25 @@ where
         }
     }
 
-    fn parse(tokens: I) -> Program {
-        let parser = Self::new(tokens);
-        Program::empty()
+    fn parse(tokens: I) -> Result<Program, ParseError> {
+        let mut parser = Self::new(tokens);
+        let mut statements = Vec::new();
+        while parser.tokens.peek().is_some() {
+            let statement = parser.parse_statement()?;
+            statements.push(statement);
+        }
+        Ok(Program::new(statements))
+    }
+
+    fn parse_statement(&mut self) -> Result<Statement, ParseError> {
+        match self.tokens.peek() {
+            Some(Token::Let) => self.parse_let_statement().map(Statement::Let),
+            _ => Err(ParseError::WhatTheHeeeeell),
+        }
+    }
+
+    fn parse_let_statement(&self) -> Result<LetStatement, ParseError> {
+        todo!()
     }
 }
 
@@ -79,7 +100,7 @@ let foobar = 838383;
         let program = Parser::parse(tokens.into_iter());
         assert_eq!(
             program,
-            Program::new(vec![
+            Ok(Program::new(vec![
                 Statement::Let(LetStatement {
                     identifier: "x".into(),
                     value: Expression::Int(5)
@@ -92,7 +113,7 @@ let foobar = 838383;
                     identifier: "foobar".into(),
                     value: Expression::Int(838_383)
                 }),
-            ])
+            ]))
         );
     }
 }
