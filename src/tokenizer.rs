@@ -4,7 +4,6 @@ use std::{iter::Peekable, str::Chars};
 pub enum Token {
     // Special:
     Illegal,
-    Eof,
     Ident(String),
     Int(i64),
 
@@ -53,30 +52,37 @@ impl<'a> Tokenizer<'a> {
         let mut tokenizer = Self::new(source_code);
         let mut tokens = Vec::new();
         loop {
-            let token = tokenizer.read_token();
-            let stop = token == Token::Eof || token == Token::Illegal;
-            tokens.push(token);
-            if stop {
-                return tokens;
+            match tokenizer.read_token() {
+                None => {
+                    return tokens;
+                }
+                Some(token @ Token::Illegal) => {
+                    tokens.push(token);
+                    return tokens;
+                }
+                Some(token) => {
+                    tokens.push(token);
+                }
             }
         }
     }
 
-    pub fn read_token(&mut self) -> Token {
+    pub fn read_token(&mut self) -> Option<Token> {
         self.skip_whitespace();
 
-        match self.chars.peek().copied() {
-            None => Token::Eof,
-            Some('0'..='9') => self.read_int(),
-            Some(c) if c.is_ident_start() => self.read_identifier(),
-            Some(c) => {
+        let c = self.chars.peek().copied()?;
+
+        Some(match c {
+            '0'..='9' => self.read_int(),
+            c if c.is_ident_start() => self.read_identifier(),
+            c => {
                 self.chars.next();
 
                 // Handle 2-characters symbols (ugly but not worth refactoring)
                 if matches!(c, '=' | '!') && self.chars.next_if_eq(&'=').is_some() {
                     match c {
-                        '=' => return Token::Eq,
-                        '!' => return Token::NotEq,
+                        '=' => return Some(Token::Eq),
+                        '!' => return Some(Token::NotEq),
                         _ => unreachable!(),
                     }
                 }
@@ -99,7 +105,7 @@ impl<'a> Tokenizer<'a> {
                     _ => Token::Illegal,
                 }
             }
-        }
+        })
     }
 
     fn skip_whitespace(&mut self) {
@@ -258,7 +264,6 @@ if (5 < 10) {
                 Token::NotEq,
                 Token::Int(9),
                 Token::Semicolon,
-                Token::Eof,
             ]
         );
     }
