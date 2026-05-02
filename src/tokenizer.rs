@@ -153,7 +153,7 @@ impl CharExt for char {
 
 #[cfg(test)]
 mod tests {
-    use super::{Token, Tokenizer};
+    use super::*;
 
     #[test]
     fn tokenize() {
